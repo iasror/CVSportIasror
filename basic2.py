@@ -9,7 +9,7 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data):
         csv_data.append([frame_number, mp_pose.PoseLandmark(idx).name, landmark.x, landmark.y, landmark.z])
     print("\n")
 
-video_path = 'input_videos/input_video_fed.mp4'
+video_path = 'input_videos/input_video.mp4'
 output_csv = 'output/output_video_fed.csv'
 
 # Initialize MediaPipe Pose and Drawing utilities
