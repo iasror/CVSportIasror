@@ -1,24 +1,34 @@
 import cv2
+import matplotlib.pyplot as plt
 import mediapipe as mp
 import csv
 import numpy as np
 
-def write_landmarks_to_csv(landmarks, frame_number, csv_data, shape):
+def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, shape, listx, listy):
     print(f"Landmark coordinates for frame {frame_number}:")
     #for normalize pose landmark
     image_height, image_width, _ = shape
-    listx, listy = array([])
     for idx, landmark in enumerate(landmarks):
         #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x*image_width}, y: {landmark.y*image_height}, z: {landmark.z*image_width})")
-        #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
+        print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
         #if mp_pose.PoseLandmark(idx).name == 'NOSE' :
             #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
         csv_data.append([frame_number, mp_pose.PoseLandmark(idx).name, landmark.x*image_width, landmark.y*image_height, landmark.z*image_width])
         listx.append(landmark.x)
         listy.append(landmark.y)
+    avgx = sum(listx)/len(listx)
+    avgy = sum(listy)/len(listy)
+    point1 = np.array(listx)
+    point2 = np.array(listy)
+    dist = np.linalg.norm(point1-point2)
+    data_dist.append(dist)
+    print("avg x :",avgx," array x :", listx)
+    print("avg y :",avgy," array y :", listy)
+    print("distance :", dist)
+    print("data dist : ", data_dist)
     print("\n")
 
-print("array ",listx)
+
 #video_path = 'input_videos/input_video.mp4'
 #output_csv = 'output/output_video.csv'
 
@@ -36,6 +46,7 @@ cap = cv2.VideoCapture(video_path)
 
 frame_number = 0
 csv_data = []
+data_dist = []
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -58,7 +69,8 @@ while cap.isOpened():
         cv2.imwrite("output_img/frame%d.jpg" % frame_number, frame)
 
         # Add the landmark coordinates to the list and print them
-        write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data, frame_rgb.shape)
+        write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data, data_dist, frame_rgb.shape, listx=[], listy=[])
+
 
     # Display the frame
     cv2.imshow('MediaPipe Pose', frame)
@@ -71,6 +83,10 @@ while cap.isOpened():
 
 cap.release()
 cv2.destroyAllWindows()
+
+# show the distance
+plt.plot(data_dist)
+plt.show()
 
 # Save the CSV data to a file
 with open(output_csv, 'w', newline='') as csvfile:
