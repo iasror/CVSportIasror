@@ -1,20 +1,24 @@
 import cv2
 import mediapipe as mp
 import csv
+import numpy as np
 
 def write_landmarks_to_csv(landmarks, frame_number, csv_data, shape):
     print(f"Landmark coordinates for frame {frame_number}:")
     #for normalize pose landmark
     image_height, image_width, _ = shape
+    listx, listy = array([])
     for idx, landmark in enumerate(landmarks):
         #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x*image_width}, y: {landmark.y*image_height}, z: {landmark.z*image_width})")
-        print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
+        #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
         #if mp_pose.PoseLandmark(idx).name == 'NOSE' :
             #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
         csv_data.append([frame_number, mp_pose.PoseLandmark(idx).name, landmark.x*image_width, landmark.y*image_height, landmark.z*image_width])
+        listx.append(landmark.x)
+        listy.append(landmark.y)
     print("\n")
 
-
+print("array ",listx)
 #video_path = 'input_videos/input_video.mp4'
 #output_csv = 'output/output_video.csv'
 
