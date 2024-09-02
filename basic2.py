@@ -4,7 +4,7 @@ import mediapipe as mp
 import csv
 import numpy as np
 
-def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, shape, listx, listy):
+def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, dist2, shape, listx, listy):
     print(f"Landmark coordinates for frame {frame_number}:")
     #for normalize pose landmark
     image_height, image_width, _ = shape
@@ -18,10 +18,11 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, shape, 
         listy.append(landmark.y)
     avgx = sum(listx)/len(listx)
     avgy = sum(listy)/len(listy)
+    #find the distance
     point1 = np.array(listx)
     point2 = np.array(listy)
-    dist = np.linalg.norm(point1-point2)
-    data_dist.append(dist)
+    dist2 = np.linalg.norm(point1-point2)
+    data_dist.append(dist2)
     print("avg x :",avgx," array x :", listx)
     print("avg y :",avgy," array y :", listy)
     print("distance :", dist)
@@ -47,6 +48,7 @@ cap = cv2.VideoCapture(video_path)
 frame_number = 0
 csv_data = []
 data_dist = []
+dist = 0
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -63,13 +65,16 @@ while cap.isOpened():
     # capture from 165-190 : 25 frame.
     if result.pose_landmarks:
         mp_drawing.draw_landmarks(frame, result.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        #mp_drawing.plot_landmarks(result.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
-        cv2.putText(frame, str(frame_number), (70, 50), cv2.FONT_HERSHEY_PLAIN, 4,
+        # Add the landmark coordinates to the list and print them
+        write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data, data_dist, dist, frame_rgb.shape, listx=[], listy=[])
+
+        # mp_drawing.plot_landmarks(result.pose_world_landmarks, mp_pose.POSE_CONNECTIONS)
+        text_put = str(frame_number)
+        print(dist)
+        #text_put = str(frame_number) + " " + str(dist)
+        cv2.putText(frame, text_put, (70, 50), cv2.FONT_HERSHEY_PLAIN, 4,
                     (255, 255, 0), 3)
         cv2.imwrite("output_img/frame%d.jpg" % frame_number, frame)
-
-        # Add the landmark coordinates to the list and print them
-        write_landmarks_to_csv(result.pose_landmarks.landmark, frame_number, csv_data, data_dist, frame_rgb.shape, listx=[], listy=[])
 
 
     # Display the frame
