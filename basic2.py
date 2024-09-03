@@ -25,7 +25,7 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, dist2, 
     data_dist.append(dist2)
     print("avg x :",avgx," array x :", listx)
     print("avg y :",avgy," array y :", listy)
-    print("distance :", dist)
+    print("distance :", dist2)
     print("data dist : ", data_dist)
     print("\n")
 
