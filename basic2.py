@@ -9,7 +9,7 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, dist2, 
     #for normalize pose landmark
     image_height, image_width, _ = shape
     for idx, landmark in enumerate(landmarks):
-        print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x*image_width}, y: {landmark.y*image_height}, z: {landmark.z*image_width})")
+        print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x*100}, y: {landmark.y*100}, z: {landmark.z*100})")
         #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
         #if mp_pose.PoseLandmark(idx).name == 'NOSE' :
             #print(f"{mp_pose.PoseLandmark(idx).name}: (x: {landmark.x}, y: {landmark.y}, z: {landmark.z})")
@@ -23,9 +23,10 @@ def write_landmarks_to_csv(landmarks, frame_number, csv_data, data_dist, dist2, 
     point2 = np.array(listy)
     dist2 = np.linalg.norm(point1-point2)
     data_dist.append(dist2)
+    print("shape : ",shape)
     print("avg x :",avgx," array x :", listx)
     print("avg y :",avgy," array y :", listy)
-    print("distance :", dist2)
+    print("center of Gravity :", dist2)
     print("data dist : ", data_dist)
     print("\n")
 
