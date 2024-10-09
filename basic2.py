@@ -1,3 +1,7 @@
+#version number xx
+#fitur identifkasi aksi, get dataset, get label(1)
+#next get dataset +7 and -7 frame dari titik teridentifikasi
+
 import cv2
 import matplotlib.pyplot as plt
 import mediapipe as mp
