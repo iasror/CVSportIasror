@@ -1,5 +1,5 @@
 #version number xx
-#fitur identifkasi aksi, get dataset, get label(1)
+#fitur identifkasi aksi, get dataset, get label(1) a
 #next get dataset +7 and -7 frame dari titik teridentifikasi
 
 import cv2
